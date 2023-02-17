@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { Box, useColorModeValue } from "@chakra-ui/react";
+import { useColor } from './hooks/useColor';
 import Marketplace from "./components/Marketplace";
-
 import Header from "./pages/layout/Header"
 import Footer from "./pages/layout/Footer";
 import Create from "./pages/create";
@@ -16,11 +16,11 @@ import { Auctions, AuctionBoard, Create as AuctionCreate } from "./components/Au
 import './App.css';
 
 function App() {
-  const backgroundColor = useColorModeValue("white", "gray.700");
+  const color = useColor();
   const textColor = useColorModeValue("gray.700", "white");
   return (
     <AnimatePresence>
-      <Box as="main" marginX="auto" backgroundColor={backgroundColor} color={textColor}
+      <Box as="main" marginX="auto" background={color.background} color={textColor}
         className="duration-300 transition">
         <Router>
           <Header />

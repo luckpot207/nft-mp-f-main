@@ -21,6 +21,15 @@ const theme = extendTheme({
       700: "#aa7013",
       800: "#926010",
       900: "#7a500e"
+    },
+    mine: {
+      50: '#181E41',
+      100: '#FFFFFF',
+      200: '#FFFFFF00'
+    },
+    gradient: {
+      50: 'linear-gradient(113.49deg, #DAFA81 -30.3%, #FAC5D5 58.12%)',
+      100: 'linear-gradient(113.49deg, #984D38 -30.3%, #181E41 58.12%)',
     }
   },
   styles: {
@@ -32,7 +41,7 @@ const theme = extendTheme({
   }
 }) as (ThemeBase & {
   colors: (typeof themeBase.colors) & {
-    brand: ColorHues
+    brand: ColorHues,
   }
 });
 

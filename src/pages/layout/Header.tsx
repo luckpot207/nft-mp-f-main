@@ -5,6 +5,7 @@ import { IoWalletSharp as WalletOpenIcon } from "react-icons/io5";
 import { FaWallet as WalletClosedIcon } from "react-icons/fa";
 import { CgMenuGridO as MenuIcon } from "react-icons/cg";
 import { useEthConnection } from "../../context/EthConnectionProvider";
+import { useColor } from "../../hooks/useColor";
 
 const NAV_LINKS = [
   {
@@ -26,8 +27,9 @@ const NAV_LINKS = [
 ]
 
 const Navbar = () => {
-  const backgroundColor = useColorModeValue("white", "gray.700");
-  const textColor = useColorModeValue("gray.700", "white");
+  const color = useColor();
+  const backgroundColor = color.layoutBack;
+  const textColor = color.menuText;
   const ColorModeChangerIcon = useColorModeValue(MoonIcon, SunIcon);
   const { toggleColorMode } = useColorMode();
   const { connectWallet, disconnectWallet, isConnected, progress } = useEthConnection();
