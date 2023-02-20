@@ -11,13 +11,16 @@ import MintNftDialog from "../Nft/MintDialog";
 import { Nft, NftCollection as INftCollection } from "../../types/nft"
 import { getIpfsFileUri, getNftStatus, NftStatus } from "../../utils/nft";
 import { isStringsEqualCaseInsensitive } from "../../utils/string";
+import { useColor } from "../../hooks/useColor";
+import { useFontSize } from "../../hooks/useFontSize";
 
 interface NftCollection {
   nftCollection: INftCollection;
 }
 
 export function NftCollection({ nftCollection: nftCollectionInitital }: NftCollection) {
-  const textColor = useColorModeValue("white", "gray.700");
+  const color = useColor();
+  const fs = useFontSize();
   const textSecondryColor = useColorModeValue("gray.400", "gray.400");
   const backgroundColor = useColorModeValue("gray.700", "white");
   const { signerAddr } = useEthConnection();
@@ -40,35 +43,55 @@ export function NftCollection({ nftCollection: nftCollectionInitital }: NftColle
   const { numOfNativeNftsOwned } = useNativeNftContract();
 
   return (
-    <Box as="main" padding={{ base: "4", md: "8" }} maxWidth="5xl" marginX="auto">
-      <Heading size="3xl" marginTop="4" fontFamily={'Zen Tokyo Zoo'}>
+    <Flex as="main" maxWidth="5xl" marginX="auto" marginTop={'100px'} paddingX={"210px"} flexDirection={'column'} alignItems={'center'}  >
+      <Text fontSize={fs.xl} fontFamily={'Poppins'} fontWeight={'700'} bgGradient={'linear-gradient(180deg, #F8E329 0%, rgba(235, 144, 38, 0.5) 100%)'} bgClip={'text'}>
         {nftCollection.name} <Text as="span" fontWeight="500" fontSize="4xl">({nftCollection.symbol})</Text>
-      </Heading>
-      <Text marginTop="10" fontSize="sm" fontWeight="500">
-        <Text as="span" fontWeight="800">ADDRESS: </Text>{nftCollection.nftContractAddr}
       </Text>
-      <Text fontSize="sm" fontWeight="500">
-        <Text as="span" fontWeight="800">AUTHOR: </Text>
-        {nftCollection.author}
-        {isStringsEqualCaseInsensitive(nftCollection.author, signerAddr) && <Text as="span" fontWeight="800"> (YOU)</Text>}
-      </Text>
-      <Text marginTop="5">
+      <Grid
+        marginTop={'106px'}
+        templateColumns={'repeat(4, 1fr)'}
+      >
+        <GridItem
+          paddingX={'24px'}
+          color={color.mainText}
+          fontSize={fs.smd}
+          fontWeight={'500'}
+        >
+          <Flex flexDirection={'column'} alignItems={'start'}>
+            <Text color={color.label}>
+              ADDRESS:
+            </Text>
+            <Text marginTop={'10px'}>
+              {nftCollection.nftContractAddr}
+            </Text>
+            <Text marginTop={'24px'} color={color.label}>AUTHOR: </Text>
+            <Text marginTop={'10px'}>
+              {nftCollection.author}
+              {isStringsEqualCaseInsensitive(nftCollection.author, signerAddr) && <Text as="span" width={'100%'} fontWeight="500" textAlign={'end'}> (YOU)</Text>}
+            </Text>
+          </Flex>
+        </GridItem>
+        <GridItem>
+
+        </GridItem>
+      </Grid>
+      <Text width={'100%'} marginTop="10px" color={color.subText} textAlign={'start'}>
         {nftCollection.description}
       </Text>
       {isStringsEqualCaseInsensitive(signerAddr, nftCollection.author) &&
-        <Box >
-          <Flex justifyContent='center'>
-            <Button rightIcon={<AddNftIcon size="24" />} display="flex" justifyContent="center" alignItems="center" onClick={() => { setMintNftDialogVisible(true) }} isLoading={progressMint} loadingText="Minting">
+        <Box marginTop={'63px'} color={color.subText}>
+          <Flex alignItems={'end'} flexDirection={'column'}>
+            <Text textAlign="center" fontWeight="500" fontSize="sm" marginTop="2">
+              Only you (the collection author) can do this
+            </Text>
+            <Button marginTop={'10px'} color={color.mainText} maxWidth={'120px'} rightIcon={<AddNftIcon size="24" />} background={color.button2} display="flex" justifyContent="center" alignItems="center" onClick={() => { setMintNftDialogVisible(true) }} isLoading={progressMint} loadingText="Minting">
               Mint
             </Button>
+
           </Flex >
-          <Text textAlign="center" fontWeight="500" fontSize="sm" marginTop="2">
-            Only you (the collection author) can do this
-          </Text>
           <MintNftDialog mintNftDialogVisible={mintNftDialogVisible} setMintNftDialogVisible={setMintNftDialogVisible} progressMint={progressMint} mintNft={mintNft} />
         </Box>
       }
-
       <Grid gap="6" templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" }} marginTop="8">
         {nftCollection.nftsInCollection.map((nft) => {
           const nftStatus = getNftStatus(signerAddr, nft);
@@ -76,9 +99,9 @@ export function NftCollection({ nftCollection: nftCollectionInitital }: NftColle
             <GridItem key={nft.tokenId.toString()} as="figure" width="full" wordBreak="break-word" display="flex" flexDirection="column">
               <Image alt={`${nft.tokenUri.name} NFT - ${nft.tokenUri.description}`} src={getIpfsFileUri(nft.tokenUri.image as string)} width="full" fallback={<Skeleton width="full" height="20rem" />} />
               <Box padding="4" flexGrow="1" backgroundColor={backgroundColor}>
-                <Heading as="figcaption" color={textColor} fontFamily='Zen Tokyo Zoo'>{nft.tokenUri.name}</Heading>
+                <Heading as="figcaption" color={color.mainText} fontFamily='Zen Tokyo Zoo'>{nft.tokenUri.name}</Heading>
                 <Text fontWeight="700" fontSize="sm" color={textSecondryColor}>Owner: {nft.tokenOwner}</Text>
-                <Text marginTop="2" color={textColor}>{nft.tokenUri.description}</Text>
+                <Text marginTop="2" color={color.mainText}>{nft.tokenUri.description}</Text>
               </Box>
               <Button borderRadius={0} width="full" colorScheme="brand" disabled={(nftStatus === NftStatus.OWN_NOT_FOR_SALE || nftStatus === NftStatus.OWN_FOR_SALE) ? false : (nftStatus === NftStatus.NOT_OWN_NOT_FOR_SALE ? true : (BigNumber.from(nft.tokenId).eq(nftSelected?.tokenId ?? "-1") && (progressBuy || progressCancel || progressSale)))} onClick={async () => {
                 setNftSelected(nft);
@@ -138,6 +161,6 @@ export function NftCollection({ nftCollection: nftCollectionInitital }: NftColle
         </AlertDialogOverlay>
       </AlertDialog>
 
-    </Box >
+    </Flex >
   )
 }

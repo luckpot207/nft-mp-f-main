@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, FormControl, FormErrorMessage, FormHelperText, FormLabel, Image, Input, InputGroup, InputLeftElement, Skeleton, Textarea, VStack } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, color, FormControl, FormErrorMessage, FormHelperText, FormLabel, Image, Input, InputGroup, InputLeftElement, Skeleton, Textarea, VStack } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -6,6 +6,8 @@ import { FiFile as FileIcon } from "react-icons/fi";
 import { BiCrop as CropIcon } from "react-icons/bi";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
+import { useColor } from "../../hooks/useColor";
+import { useFontSize } from "../../hooks/useFontSize";
 
 const nftImageTypesAccepted = "image/jpeg,image/png,image/gif,image/svg,image/webp";
 
@@ -53,61 +55,50 @@ export default function MintNftDialog({ mintNftDialogVisible, setMintNftDialogVi
       }
     }
   });
-
+  const color = useColor();
+  const fs = useFontSize();
   return (
     <AlertDialog isOpen={mintNftDialogVisible} onClose={() => { setMintNftDialogVisible(false); }} leastDestructiveRef={mintNftDialogCloseButtonRef} isCentered>
       <AlertDialogOverlay>
         <AlertDialogContent>
-
-          <Box maxHeight="60vh" overflowX="hidden" width="full">
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+          <Box background={color.background} color={color.mainText} borderRadius={'5px'} maxHeight="80vh" overflowX="hidden" width="full">
+            <AlertDialogHeader bgGradient={'linear-gradient(180deg, #F8E329 0%, rgba(235, 144, 38, 0.5) 100%)'} bgClip='text' fontSize='lg' fontWeight='bold'>
               Mint new NFT
             </AlertDialogHeader>
-
             <AlertDialogBody>
-
               <form onSubmit={formik.handleSubmit}>
-
                 <VStack gap="4">
                   <FormControl isInvalid={!!formik.errors.name} isRequired>
                     <FormLabel>Name</FormLabel>
                     <Input colorScheme="brand" name="name" value={formik.values.name} onChange={formik.handleChange} placeholder="My awesome NFT" autoComplete="off" />
-                    <FormHelperText>Name of the NFT</FormHelperText>
+                    <FormHelperText color={color.subText}>Name of the NFT</FormHelperText>
                     <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
                   </FormControl>
-
                   <FormControl isInvalid={!!formik.errors.image} isRequired>
                     <FormLabel>Image</FormLabel>
-
                     {(formik.values.image?.name !== "" && !isCropped) ?
                       <>
                         <Cropper src={formik.values.imageUploadUri} aspectRatio={1} guides style={{ width: "100%", height: "20rem" }} crop={(e) => { setCropperInstance(e.currentTarget.cropper); }} accept={nftImageTypesAccepted} alt="Image cropper" />
                         <Button colorScheme="brand" display="flex" justifyContent="center" alignItems="center" marginLeft="auto" marginTop="4" rightIcon={<CropIcon size="20" />} onClick={() => {
                           const croppedImgUrl = cropperInstance?.getCroppedCanvas().toDataURL();
                           formik.setFieldValue("imageUploadUri", croppedImgUrl);
-
                           cropperInstance?.getCroppedCanvas().toBlob((croppedImgBlob) => { formik.setFieldValue("imageUploadBlob", croppedImgBlob) });
                           setIsCropped(true);
                         }}>
                           Done
                         </Button>
                       </> :
-
                       <>
                         {formik.values.imageUploadUri !== "" &&
                           <Image src={formik.values.imageUploadUri} alt="cropped nft image" width="full" cursor="pointer" onClick={() => { fileUploadInputRef.current?.click() }} fallback={<Skeleton width="full" height="20rem" />} />
                         }
-
                         <InputGroup minHeight="3rem" display="flex" alignItems="center">
                           <InputLeftElement pointerEvents="none" top="1">
                             <FileIcon />
                           </InputLeftElement>
-
                           <Input cursor="pointer" onClick={() => { fileUploadInputRef.current?.click() }} placeholder="Upload" value={formik.values.image?.name || "No file selected"} readOnly variant={isCropped ? "filled" : "outline"} />
-
                           <input type="file" name="image" onChange={(e) => {
                             formik.setFieldValue("image", e.target.files?.item(0));
-
                             const reader = new FileReader();
                             reader.onload = () => {
                               formik.setFieldValue("imageUploadUri", reader.result);
@@ -121,33 +112,27 @@ export default function MintNftDialog({ mintNftDialogVisible, setMintNftDialogVi
                     }
                     {!isCropped &&
                       <>
-                        <FormHelperText>Image for the NFT</FormHelperText>
+                        <FormHelperText color={color.subText}>Image for the NFT</FormHelperText>
                         <FormErrorMessage>{!!formik.errors.image}</FormErrorMessage>
                       </>
                     }
                   </FormControl>
-
                   <FormControl isInvalid={!!formik.errors.description}>
                     <FormLabel>Description</FormLabel>
                     <Textarea colorScheme="brand" name="description" value={formik.values.description} onChange={formik.handleChange} rows={5} placeholder="This NFT is about..." />
-                    <FormHelperText>Description of the NFT</FormHelperText>
+                    <FormHelperText color={color.subText}>Description of the NFT</FormHelperText>
                     <FormErrorMessage>{formik.errors.description}</FormErrorMessage>
                   </FormControl>
-
                 </VStack>
-
               </form>
-
             </AlertDialogBody>
+            <AlertDialogFooter gap="4">
+              <Button type="submit" colorScheme="brand" background={color.button2} onClick={async () => { formik.handleSubmit(); }} isLoading={progressMint} loadingText="Minting" isDisabled={!formik.isValid}>
+                Mint
+              </Button>
+              <Button ref={mintNftDialogCloseButtonRef} background={color.button3} onClick={() => { setMintNftDialogVisible(false); }}>Close</Button>
+            </AlertDialogFooter>
           </Box>
-
-          <AlertDialogFooter gap="4">
-            <Button ref={mintNftDialogCloseButtonRef} onClick={() => { setMintNftDialogVisible(false); }}>Close</Button>
-            <Button type="submit" colorScheme="brand" onClick={async () => { formik.handleSubmit(); }} isLoading={progressMint} loadingText="Minting" isDisabled={!formik.isValid}>
-              Mint
-            </Button>
-          </AlertDialogFooter>
-
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>
