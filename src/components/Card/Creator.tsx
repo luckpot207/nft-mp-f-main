@@ -77,7 +77,7 @@ export default function Creator({ creator, nft, description, handleFollowed }: C
                 height={'100%'}
                 borderRadius={'10px'}
                 background={followed ? color.disable2 : color.button1}
-                color={followed ? color.logoText2 : color.mainText}
+                color={followed ? color.disableBtnText : color.mainText}
                 fontSize={fs.sm}
                 fontWeight={'500'}
                 onClick={() => { touchFollow((followed) => !followed) }}

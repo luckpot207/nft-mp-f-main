@@ -1,3 +1,3 @@
-export * from "./Collection";
+export * from "./CollectionDetail";
 export * from "./Collections";
 export * from "./Skeleton";

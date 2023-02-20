@@ -5,18 +5,22 @@ import { BiPurchaseTagAlt as BuyIcon } from "react-icons/bi";
 import { useEthConnection } from "../../context/EthConnectionProvider";
 import useNativeNftContract from "../../hooks/useNftContract";
 import { NativeNft } from "../../types/nativeNft";
+import { useColor } from "../../hooks/useColor";
+import { useFontSize } from "../../hooks/useFontSize";
+
 
 export default function BuyBox() {
   const { nativeNftsForSaleByOthers } = useNativeNftContract();
   const { isConnected } = useEthConnection();
-
+  const color = useColor();
+  const fs = useFontSize();
   return (
     <>
       {isConnected &&
         <>
           <Box as="section" padding={{ base: "4", md: "8" }} maxWidth="5xl" marginX="auto" marginTop="2">
 
-            <Heading size="3xl" textAlign="center" marginTop={{ base: "2", md: "unset" }}>Buy NativeNfts</Heading>
+            <Heading fontSize={fs.xl} color={color.mainText} textAlign="center" marginTop={{ base: "2", md: "unset" }}>Buy NativeNfts</Heading>
 
             <Text marginTop={{ base: "4", md: "2" }} textAlign="center">
               {nativeNftsForSaleByOthers.length === 0 ?

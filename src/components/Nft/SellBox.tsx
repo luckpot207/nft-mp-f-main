@@ -1,25 +1,29 @@
 import { ReactNode, useCallback, useRef, useState } from "react";
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogHeader, AlertDialogOverlay, AlertDialogFooter, Box, Button, Divider, Flex, FormControl, FormHelperText, FormLabel, Heading, Image, Input, Skeleton, Text, Tooltip, useTheme, useToast, Center } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogHeader, AlertDialogOverlay, AlertDialogFooter, Box, Button, Divider, Flex, FormControl, FormHelperText, FormLabel, Heading, Image, Input, Skeleton, Text, Tooltip, useTheme, useToast, Center, HStack } from "@chakra-ui/react";
 import { BigNumber, ethers } from "ethers";
 import { BiPurchaseTagAlt as SellIcon } from "react-icons/bi";
 import { MdOutlineCancelPresentation as CancelIcon } from "react-icons/md";
 import { NativeNft } from "../../types/nativeNft";
 import { NFT_STATUS } from "../../utils/enums";
 import useNativeNftContract from "../../hooks/useNftContract";
+import { useColor } from "../../hooks/useColor";
+import { useFontSize } from "../../hooks/useFontSize";
+
 
 export default function SellBox() {
   const { nativeNftsOwned } = useNativeNftContract();
-
+  const color = useColor();
+  const fs = useFontSize();
   return (
     <Box as="section" marginTop={{ base: "4", md: "12" }}>
-      <Heading size="3xl" textAlign="center">Sell your NativeNfts</Heading>
-      <Flex padding={{ base: "4", md: "8" }} maxWidth="5xl" marginX="auto" flexDirection={{ base: "column", md: "row" }} flexWrap="nowrap">
+      <Heading fontSize={fs.lg} color={color.mainText} textAlign="center">Sell your NativeNfts</Heading>
+      <HStack alignItems={'start'} spacing={'200px'} padding={{ base: "4", md: "8" }} maxWidth="5xl" marginX="auto" flexDirection={{ base: "column", md: "row" }} flexWrap="nowrap">
         <ListGrid title="Unlisted" nativeNftsToDisplay={nativeNftsOwned.filter((ownedNft) => ownedNft.status === NFT_STATUS.NOT_FOR_SALE)} type="not-sell" />
         <Center height='700px'>
           <Divider orientation='vertical' border='2px solid' />
         </Center>
         <ListGrid title="For sale" nativeNftsToDisplay={nativeNftsOwned.filter((ownedNft) => ownedNft.status === NFT_STATUS.FOR_SALE)} type="sell" />
-      </Flex>
+      </HStack>
     </Box>
   )
 }
@@ -39,7 +43,8 @@ const ListGrid = ({ nativeNftsToDisplay, title, type }: { nativeNftsToDisplay: A
   const [sellAmount, setSellAmount] = useState<string>("0");
   const [nftSelected, setNftSelected] = useState<NativeNft | null>(null);
   const toast = useToast();
-
+  const color = useColor();
+  const fs = useFontSize();
   // Handles closing sell dialog
   const handleCloseDialog = useCallback(() => {
     setDialogVisible(false);
@@ -74,7 +79,7 @@ const ListGrid = ({ nativeNftsToDisplay, title, type }: { nativeNftsToDisplay: A
   return (
     <Box as="section" position="relative" width={{ base: "full", md: "50%" }} padding={{ base: "2", md: "4" }}>
 
-      <Heading size="2xl" textAlign="center" marginTop={{ base: "2", md: "unset" }}>{title}</Heading>
+      <Heading color={color.tabText} fontSize={fs.lg} textAlign="center" marginTop={{ base: "2", md: "unset" }}>{title}</Heading>
 
       <Text marginTop={{ base: "4", md: "2" }} textAlign="center">
         {nativeNftsToDisplay.length === 0 ?

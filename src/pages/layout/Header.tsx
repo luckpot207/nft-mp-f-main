@@ -58,6 +58,9 @@ const Navbar = () => {
       zIndex={5}
       background={color.layoutBack}
       color={color.navText}
+      boxShadow='xl' 
+      rounded='md' 
+      bg='#180a3245'
     >
       <Link to='/'>
         <Flex fontWeight={'700'}>

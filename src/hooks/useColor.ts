@@ -19,6 +19,8 @@ interface ColorHookResult {
   disable2: string
   label: string
   title: string
+  tabText: string
+  disableBtnText: string
 }
 
 export const useColor = (): ColorHookResult => {
@@ -37,7 +39,8 @@ export const useColor = (): ColorHookResult => {
   const disable2 = useColorModeValue('mine.700', 'mine.700');
   const label = useColorModeValue('mine.800', 'mine.750');
   const title = useColorModeValue('gradient.400', 'gradient.350');
-
+  const tabText = useColorModeValue('mine.950', 'mine.950');
+  const disableBtnText = useColorModeValue('mine.350', 'mine.300');
 
   return {
     background,
@@ -55,5 +58,7 @@ export const useColor = (): ColorHookResult => {
     disable2,
     label,
     title,
+    tabText,
+    disableBtnText
   };
 };

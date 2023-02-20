@@ -30,6 +30,7 @@ const theme = extendTheme({
       150: '#FFFFFF70',
       200: '#FFFFFF00',
       300: '#28B498',
+      350: '#6e0077',
       400: '#B75CFF',
       500: '#FFFFFFA1',
       600: '#FFFFFF1A',
@@ -38,6 +39,7 @@ const theme = extendTheme({
       800: '#2675EB',
       850: '#FF75FF',
       900: '#0075FF',
+      950: '#e6911f',
 
     },
     gradient: {

@@ -43,21 +43,23 @@ export function NftCollection({ nftCollection: nftCollectionInitital }: NftColle
   const { numOfNativeNftsOwned } = useNativeNftContract();
 
   return (
-    <Flex as="main" maxWidth="5xl" marginX="auto" marginTop={'100px'} paddingX={"210px"} flexDirection={'column'} alignItems={'center'}  >
+    <Flex as="main" marginTop={'100px'} paddingX={"210px"} flexDirection={'column'} alignItems={'center'}  >
       <Text fontSize={fs.xl} fontFamily={'Poppins'} fontWeight={'700'} bgGradient={'linear-gradient(180deg, #F8E329 0%, rgba(235, 144, 38, 0.5) 100%)'} bgClip={'text'}>
         {nftCollection.name} <Text as="span" fontWeight="500" fontSize="4xl">({nftCollection.symbol})</Text>
       </Text>
       <Grid
         marginTop={'106px'}
-        templateColumns={'repeat(4, 1fr)'}
+        templateColumns={'repeat(3, 1fr)'}
       >
         <GridItem
           paddingX={'24px'}
           color={color.mainText}
+          colSpan={2}
           fontSize={fs.smd}
           fontWeight={'500'}
+          wordBreak="break-word"
         >
-          <Flex flexDirection={'column'} alignItems={'start'}>
+          <Flex flexDirection={'column'} wordBreak="break-word" alignItems={'start'}>
             <Text color={color.label}>
               ADDRESS:
             </Text>
@@ -69,15 +71,54 @@ export function NftCollection({ nftCollection: nftCollectionInitital }: NftColle
               {nftCollection.author}
               {isStringsEqualCaseInsensitive(nftCollection.author, signerAddr) && <Text as="span" width={'100%'} fontWeight="500" textAlign={'end'}> (YOU)</Text>}
             </Text>
+            <Text width={'100%'} fontSize={fs.sm} marginTop="20px" color={color.subText} textAlign={'start'}>
+              {nftCollection.description}
+            </Text>
           </Flex>
         </GridItem>
-        <GridItem>
-
+        <GridItem
+          colSpan={1}
+          fontSize={fs.smd}
+          color={color.mainText}
+        >
+          <Grid gap="6" templateRows={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" }}>
+            {nftCollection.nftsInCollection.map((nft) => {
+              const nftStatus = getNftStatus(signerAddr, nft);
+              return (
+                <GridItem key={nft.tokenId.toString()} as="figure" width="full" wordBreak="break-word" display="flex" flexDirection="column">
+                  <Image alt={`${nft.tokenUri.name} NFT - ${nft.tokenUri.description}`} src={getIpfsFileUri(nft.tokenUri.image as string)} width="full" fallback={<Skeleton width="full" height="20rem" />} />
+                  <Box padding="4" flexGrow="1" backgroundColor={backgroundColor}>
+                    <Heading as="figcaption" color={color.mainText} fontFamily='Zen Tokyo Zoo'>{nft.tokenUri.name}</Heading>
+                    <Text fontWeight="700" fontSize="sm" color={textSecondryColor}>Owner: {nft.tokenOwner}</Text>
+                    <Text marginTop="2" color={color.mainText}>{nft.tokenUri.description}</Text>
+                  </Box>
+                  <Button borderRadius={0} width="full" colorScheme="brand" disabled={(nftStatus === NftStatus.OWN_NOT_FOR_SALE || nftStatus === NftStatus.OWN_FOR_SALE) ? false : (nftStatus === NftStatus.NOT_OWN_NOT_FOR_SALE ? true : (BigNumber.from(nft.tokenId).eq(nftSelected?.tokenId ?? "-1") && (progressBuy || progressCancel || progressSale)))} onClick={async () => {
+                    setNftSelected(nft);
+                    switch (nftStatus) {
+                      case NftStatus.OWN_FOR_SALE:
+                        await cancelSaleNft(nft.tokenId);
+                        break;
+                      case NftStatus.OWN_NOT_FOR_SALE:
+                        setPutNftForSaleDialogVisible(true);
+                        break;
+                      case NftStatus.NOT_OWN_FOR_SALE:
+                        await buyNft(nft.tokenId);
+                        break;
+                    }
+                  }} isLoading={BigNumber.from(nft.tokenId).eq(nftSelected?.tokenId ?? "-1") && (progressBuy || progressCancel || progressSale)}>
+                    {nftStatus === NftStatus.OWN_FOR_SALE ? "Cancel" : (nftStatus === NftStatus.OWN_NOT_FOR_SALE ? "Sell" : "Buy")}
+                  </Button>
+                  <Text width="full" padding="2" textAlign="center" backgroundColor={nftStatus === NftStatus.NOT_OWN_NOT_FOR_SALE ? "gray.500" : (nftStatus === NftStatus.OWN_FOR_SALE ? "green.500" : "blue.400")} color="white">
+                    {nftStatus === NftStatus.OWN_FOR_SALE ? "Owned; listed for sale" : (nftStatus === NftStatus.OWN_NOT_FOR_SALE ? "Owned; not for sale" : (nftStatus === NftStatus.NOT_OWN_FOR_SALE ? "On sale" : "Not for sale"))}
+                    {(nftStatus === NftStatus.OWN_FOR_SALE || nftStatus === NftStatus.NOT_OWN_FOR_SALE) && ` - ${ethers.utils.formatEther(nft.tokenPrice)} MATIC`}
+                  </Text>
+                </GridItem>
+              )
+            })}
+          </Grid>
         </GridItem>
       </Grid>
-      <Text width={'100%'} marginTop="10px" color={color.subText} textAlign={'start'}>
-        {nftCollection.description}
-      </Text>
+
       {isStringsEqualCaseInsensitive(signerAddr, nftCollection.author) &&
         <Box marginTop={'63px'} color={color.subText}>
           <Flex alignItems={'end'} flexDirection={'column'}>
@@ -92,41 +133,7 @@ export function NftCollection({ nftCollection: nftCollectionInitital }: NftColle
           <MintNftDialog mintNftDialogVisible={mintNftDialogVisible} setMintNftDialogVisible={setMintNftDialogVisible} progressMint={progressMint} mintNft={mintNft} />
         </Box>
       }
-      <Grid gap="6" templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" }} marginTop="8">
-        {nftCollection.nftsInCollection.map((nft) => {
-          const nftStatus = getNftStatus(signerAddr, nft);
-          return (
-            <GridItem key={nft.tokenId.toString()} as="figure" width="full" wordBreak="break-word" display="flex" flexDirection="column">
-              <Image alt={`${nft.tokenUri.name} NFT - ${nft.tokenUri.description}`} src={getIpfsFileUri(nft.tokenUri.image as string)} width="full" fallback={<Skeleton width="full" height="20rem" />} />
-              <Box padding="4" flexGrow="1" backgroundColor={backgroundColor}>
-                <Heading as="figcaption" color={color.mainText} fontFamily='Zen Tokyo Zoo'>{nft.tokenUri.name}</Heading>
-                <Text fontWeight="700" fontSize="sm" color={textSecondryColor}>Owner: {nft.tokenOwner}</Text>
-                <Text marginTop="2" color={color.mainText}>{nft.tokenUri.description}</Text>
-              </Box>
-              <Button borderRadius={0} width="full" colorScheme="brand" disabled={(nftStatus === NftStatus.OWN_NOT_FOR_SALE || nftStatus === NftStatus.OWN_FOR_SALE) ? false : (nftStatus === NftStatus.NOT_OWN_NOT_FOR_SALE ? true : (BigNumber.from(nft.tokenId).eq(nftSelected?.tokenId ?? "-1") && (progressBuy || progressCancel || progressSale)))} onClick={async () => {
-                setNftSelected(nft);
-                switch (nftStatus) {
-                  case NftStatus.OWN_FOR_SALE:
-                    await cancelSaleNft(nft.tokenId);
-                    break;
-                  case NftStatus.OWN_NOT_FOR_SALE:
-                    setPutNftForSaleDialogVisible(true);
-                    break;
-                  case NftStatus.NOT_OWN_FOR_SALE:
-                    await buyNft(nft.tokenId);
-                    break;
-                }
-              }} isLoading={BigNumber.from(nft.tokenId).eq(nftSelected?.tokenId ?? "-1") && (progressBuy || progressCancel || progressSale)}>
-                {nftStatus === NftStatus.OWN_FOR_SALE ? "Cancel" : (nftStatus === NftStatus.OWN_NOT_FOR_SALE ? "Sell" : "Buy")}
-              </Button>
-              <Text width="full" padding="2" textAlign="center" backgroundColor={nftStatus === NftStatus.NOT_OWN_NOT_FOR_SALE ? "gray.500" : (nftStatus === NftStatus.OWN_FOR_SALE ? "green.500" : "blue.400")} color="white">
-                {nftStatus === NftStatus.OWN_FOR_SALE ? "Owned; listed for sale" : (nftStatus === NftStatus.OWN_NOT_FOR_SALE ? "Owned; not for sale" : (nftStatus === NftStatus.NOT_OWN_FOR_SALE ? "On sale" : "Not for sale"))}
-                {(nftStatus === NftStatus.OWN_FOR_SALE || nftStatus === NftStatus.NOT_OWN_FOR_SALE) && ` - ${ethers.utils.formatEther(nft.tokenPrice)} MATIC`}
-              </Text>
-            </GridItem>
-          )
-        })}
-      </Grid>
+
 
       {/* PUT FOR SALE DIALOG */}
       <AlertDialog isOpen={putNftForSaleDialogVisible} onClose={() => { setPutNftForSaleDialogVisible(false); }} leastDestructiveRef={putNftForSaleCloseButtonRef} isCentered>

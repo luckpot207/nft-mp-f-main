@@ -24,9 +24,9 @@ import NFT3 from "../assets/images/landing/topnft3.png";
 export default function Home() {
   const color = useColor();
   const fs = useFontSize();
-  const [followed1, setFollowed1] = useState<boolean>();
-  const [followed2, setFollowed2] = useState<boolean>();
-  const [followed3, setFollowed3] = useState<boolean>();
+  const [followed1, setFollowed1] = useState<boolean>(false);
+  const [followed2, setFollowed2] = useState<boolean>(false);
+  const [followed3, setFollowed3] = useState<boolean>(false);
 
   return (
     <VStack
