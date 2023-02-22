@@ -43,7 +43,7 @@ export default function Creator({ name, img_src, nft, description, handleFollowe
           zIndex={999}
         />
         <GridItem>
-          <Image src={nft} />
+          <Image width={'389px'} height={'265px'} src={nft} />
         </GridItem>
         <GridItem>
           <Flex flexDirection={'column'} alignItems={'center'}>

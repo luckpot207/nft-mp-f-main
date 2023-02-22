@@ -5,9 +5,10 @@ import { IoWalletSharp as WalletOpenIcon } from "react-icons/io5";
 import { FaWallet as WalletClosedIcon } from "react-icons/fa";
 import { CgMenuGridO as MenuIcon } from "react-icons/cg";
 import { useEthConnection } from "../../context/EthConnectionProvider";
+import '@rainbow-me/rainbowkit/styles.css';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useColor } from "../../hooks/useColor";
 import { useFontSize } from "../../hooks/useFontSize";
-
 
 const NAV_LINKS = [
   {
@@ -58,8 +59,9 @@ const Navbar = () => {
       zIndex={5}
       background={color.layoutBack}
       color={color.navText}
-      boxShadow='xl' 
-      rounded='md' 
+      backdropFilter={'blur(16px)'}
+      boxShadow='xl'
+      rounded='md'
       bg='#180a3245'
     >
       <Link to='/'>
@@ -91,17 +93,9 @@ const Navbar = () => {
               variant="outline"
               onClick={toggleColorMode}
             />
-            <IconButton
-              aria-label="Connect Wallet"
-              icon={isConnected ?
-                <WalletOpenIcon size="20" /> :
-                <WalletClosedIcon size="20" />
-              }
-              isRound={false}
-              variant="outline"
-              onClick={isConnected ? disconnectWallet : connectWallet}
-              isLoading={progress}
-            />
+            <Box>
+              <ConnectButton accountStatus={'full'} label="$" />
+            </Box>
           </Show>
 
           {/* Show menu for smaller screens */}
@@ -110,12 +104,15 @@ const Navbar = () => {
               <MenuButton as={IconButton} aria-label='Navigation menu' icon={<MenuIcon />} isRound />
               <MenuList>
                 <MenuGroup title="Wallet">
-                  <MenuItem aria-label="Connect wallet" onClick={connectWallet} display="flex" alignItems="center" gap="2" >
+                  <MenuItem aria-label="Connect wallet" display="flex" alignItems="center" gap="2" >
+                    <ConnectButton label="$" accountStatus={'full'}/>
+                  </MenuItem>
+                  {/* <MenuItem aria-label="Connect wallet" onClick={connectWallet} display="flex" alignItems="center" gap="2" >
                     {isConnected ?
                       <WalletOpenIcon size="20" /> :
                       <WalletClosedIcon size="20" />
                     }
-                  </MenuItem>
+                  </MenuItem> */}
                 </MenuGroup>
                 <MenuDivider />
                 <MenuGroup title="Links">
@@ -130,9 +127,9 @@ const Navbar = () => {
                 <MenuDivider />
                 <MenuGroup title="Settings">
                   <MenuItem aria-label="Switch theme" onClick={toggleColorMode} display="flex" alignItems="center" gap="2">
-                    Switch theme 
+                    Switch theme
                     <ColorModeChangerIcon />
-                    </MenuItem>
+                  </MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>

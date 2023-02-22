@@ -22,6 +22,21 @@ import supportedChains from './utils/chains'
 import { BLOCKCHAIN } from './utils/enums';
 import './index.css';
 import '@rainbow-me/rainbowkit/styles.css'
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import {
+  injectedWallet,
+  rainbowWallet,
+  metaMaskWallet,
+  coinbaseWallet,
+  walletConnectWallet,
+  trustWallet,
+  imTokenWallet,
+  omniWallet,
+  ledgerWallet,
+  braveWallet,
+  argentWallet
+} from '@rainbow-me/rainbowkit/wallets';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -32,10 +47,24 @@ const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ])
 
-const { connectors } = getDefaultWallets({
-  appName: 'Marketplace Hub',
-  chains,
-})
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Suggested',
+    wallets: [
+      injectedWallet({ chains }),
+      rainbowWallet({ chains }),
+      metaMaskWallet({ chains }),
+      coinbaseWallet({ chains, appName: 'My RainbowKit App' }),
+      walletConnectWallet({ chains }),
+      trustWallet({ chains }),
+      imTokenWallet({ chains }),
+      omniWallet({ chains }),
+      ledgerWallet({ chains }),
+      braveWallet({ chains }),
+      argentWallet({ chains })
+    ],
+  },
+])
 
 const wagmiClient = createClient({
   autoConnect: true,
@@ -50,7 +79,11 @@ root.render(
       <EthConnectionProvider defaultNetwork={BLOCKCHAIN.PolygonTestnet}>
         <MarketplaceProvider>
           <NativeNftProvider>
-            <App />
+            <WagmiConfig client={wagmiClient}>
+              <RainbowKitProvider chains={chains}>
+                <App />
+              </RainbowKitProvider>
+            </WagmiConfig>
           </NativeNftProvider>
         </MarketplaceProvider>
       </EthConnectionProvider>
