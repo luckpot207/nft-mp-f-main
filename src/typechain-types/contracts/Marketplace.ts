@@ -26,6 +26,7 @@ import type {
   OnEvent,
   PromiseOrValue,
 } from "../common";
+import { StringLiteralLike } from "typescript";
 
 export declare namespace Marketplace {
   export type AuctionDataStruct = {
@@ -96,6 +97,15 @@ export declare namespace Marketplace {
     author: string;
     nftContractAddr: string;
     nftsInCollection: Marketplace.NftStructOutput[];
+  };
+
+  export type UserDataStructure = {
+    username: string;
+    sc_address: string;
+    image_src: string;
+    discord: string;
+    facebook: string;
+    instagram: string;
   };
 }
 

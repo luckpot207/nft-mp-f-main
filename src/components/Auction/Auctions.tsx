@@ -62,7 +62,7 @@ const NftCollections = ({ collections }: NftCollections) => {
     >
       {collections.map((collection) => (
         <GridItem key={collection.nftContractAddr} as="figure" width="full" backgroundColor="white" wordBreak="break-word">
-          <Link to={`/collection/${collection.nftContractAddr}`}><a>
+          <Link to={`/collection/${collection.nftContractAddr}`}>
             {collection.nftsInCollection.length > 0 ? (
               <Image alt={`${collection.name} NFT Collection - ${collection.description}`} src={getIpfsFileUri(decodeMetadataUri(collection.nftsInCollection[0].metadataUri).image as string)} width="full" />
             ) : null}
@@ -71,7 +71,7 @@ const NftCollections = ({ collections }: NftCollections) => {
               <Text color="blackAlpha.500" fontWeight="700" fontSize="sm" fontStyle="italic">Author: {collection.author}</Text>
               <Text color="black" marginTop="2">{collection.description}</Text>
             </Box>
-          </a></Link>
+          </Link>
         </GridItem>
       ))}
     </Grid>

@@ -3,13 +3,13 @@ import { useState, useEffect } from "react";
 import { Image, Grid, GridItem, VStack, Flex, Box, Button, Text, HStack, Spacer } from "@chakra-ui/react";
 import { useColor } from "../hooks/useColor";
 import { useFontSize } from "../hooks/useFontSize";
-import Hurricane from "../assets/images/landing/hurricane.png";
-import Sphere from "../assets/images/landing/sphere.png";
-import Camera from "../assets/images/landing/camera.png";
-import Diamond from "../assets/images/landing/diamond.png";
-import Brain from "../assets/images/landing/brain.png";
-import Rabbit from "../assets/images/landing/rabbit.png";
-import Man from "../assets/images/landing/man.png";
+import Hurricane from "../assets/images/client/hurricane.jpg";
+import Sphere from "../assets/images/client/sphere.png";
+import Camera from "../assets/images/client/camera.png";
+import Diamond from "../assets/images/client/diamond.png";
+import Brain from "../assets/images/client/brain.png";
+import Rabbit from "../assets/images/client/rabbit.jpg";
+import Man from "../assets/images/client/man.png";
 import Blockchain_logo from "../assets/images/landing/blockchain.io_logo.png";
 import Binance_logo from "../assets/images/landing/binance_logo.png";
 import Ethereum_logo from "../assets/images/landing/ethereum_logo.png";
@@ -148,17 +148,17 @@ export default function Home() {
           >
             <HStack spacing={'15px'}>
               <VStack spacing={'15px'}>
-                <Image borderRadius={'10px'} src={Hurricane} />
-                <Image borderRadius={'10px'} src={Sphere} />
-                <Image borderRadius={'10px'} src={Camera} />
+                <Image width={'187px'} height={'140px'} borderRadius={'10px'} src={Hurricane} />
+                <Image width={'187px'} height={'220px'} borderRadius={'10px'} src={Sphere} />
+                <Image width={'187px'} height={'127px'} borderRadius={'10px'} src={Camera} />
               </VStack>
               <VStack spacing={'10px'}>
-                <Image borderRadius={'10px'} marginBottom={'5px'} src={Diamond} />
-                <Image borderRadius={'10px'} src={Brain} />
-                <Image borderRadius={'10px'} src={Rabbit} />
+                <Image width={'187px'} height={'108px'} borderRadius={'10px'} marginBottom={'5px'} src={Diamond} />
+                <Image width={'187px'} height={'220px'} borderRadius={'10px'} src={Brain} />
+                <Image width={'187px'} height={'150px'} borderRadius={'10px'} src={Rabbit} />
               </VStack>
               <Box>
-                <Image borderRadius={'10px'} src={Man} />
+                <Image width={'187px'} height={'412px'} borderRadius={'10px'} src={Man} />
               </Box>
             </HStack>
           </Flex>
@@ -227,19 +227,22 @@ export default function Home() {
           spacing={'15px'}
         >
           <Creator
-            creator={Creator1}
+            img_src={Creator1}
+            name="Jhon Stick"
             nft={NFT1}
             description={"Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
             handleFollowed={setFollowed1}
           />
           <Creator
-            creator={Creator2}
+            img_src={Creator2}
+            name="Jhon Stick"
             nft={NFT2}
             description={"Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
             handleFollowed={setFollowed2}
           />
           <Creator
-            creator={Creator3}
+            img_src={Creator3}
+            name="Jhon Stick"
             nft={NFT3}
             description={"Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
             handleFollowed={setFollowed3}

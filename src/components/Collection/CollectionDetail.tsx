@@ -150,9 +150,9 @@ export function NftCollection({ nftCollection: nftCollectionInitital }: NftColle
                 <FormLabel>Selling price</FormLabel>
                 <Input min="0" focusBorderColor="brand.500" value={nftForSaleAmount} onChange={(e) => { setNftForSaleAmount(e.target.value) }} type="number" placeholder="XX.XX (MATIC)" />
                 <FormHelperText>Current marketplace commission: {3 - (numOfNativeNftsOwned.toNumber() * 0.05)}%</FormHelperText>
-                <Link to="/mint"><a>
+                <Link to="/mint">
                   <Text marginTop="2" fontStyle="italic" fontWeight="600" fontSize="sm" color="brand.500">Buy more WOOFY tokens to decrease marketplace commission <LinkIcon display="inline" /></Text>
-                </a></Link>
+                </Link>
               </FormControl>
 
             </AlertDialogBody>

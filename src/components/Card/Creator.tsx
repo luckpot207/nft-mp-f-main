@@ -6,13 +6,14 @@ import { useParams } from "react-router-dom";
 import GradientBorder from "../../components/Chakra/GradientBorder";
 
 interface CreatorProps {
-  creator: string
+  name: string
+  img_src: string
   nft: string
   description: string
   handleFollowed: Function
 }
 
-export default function Creator({ creator, nft, description, handleFollowed }: CreatorProps) {
+export default function Creator({ name, img_src, nft, description, handleFollowed }: CreatorProps) {
   const color = useColor();
   const fs = useFontSize();
   const [followed, touchFollow] = useState<boolean>(false);
@@ -38,7 +39,7 @@ export default function Creator({ creator, nft, description, handleFollowed }: C
           left={'145px'}
           width={'99px'}
           height={'99px'}
-          src={creator}
+          src={img_src}
           zIndex={999}
         />
         <GridItem>
@@ -51,7 +52,7 @@ export default function Creator({ creator, nft, description, handleFollowed }: C
               fontWeight={'700'}
               marginTop={'64px'}
             >
-              John Wick
+              {name}
             </Text>
             <Text
               marginTop={'10px'}

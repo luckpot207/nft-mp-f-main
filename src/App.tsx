@@ -13,6 +13,8 @@ import Collections from "./pages/collections";
 import Mint from "./pages/mint";
 import FAQ from "./pages/faq";
 import ABOUT from "./pages/about";
+import Request from "./pages/request";
+import RoleMG from "./pages/rolemg";
 import NoPage from './pages/404';
 import AuctionPage from "./pages/auction";
 import { Auctions, AuctionBoard, Create as AuctionCreate } from "./components/Auction";
@@ -32,6 +34,8 @@ function App() {
           <Routes >
             <Route path="/" element={<Home />} />
             <Route path="/create" element={<Create />} />
+            <Route path="/rolemg" element={<RoleMG />} />
+            <Route path="/request" element={<Request />} />
             <Route path="/collections" element={<Collections />} />
             <Route path="/collection/:contractAddress" element={<Collection />} />
             <Route path="/mint" element={<Mint />} />
